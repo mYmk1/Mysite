@@ -102,27 +102,25 @@ function setupReveal() {
   document.querySelectorAll('.sr').forEach(el => obs.observe(el));
 }
 
-/* Company domain map for logos */
-const COMPANY_DOMAINS = {
-  'pixster studio':    'pixsterstudio.com',
-  'amazon':            'amazon.com',
-  'bolt.earth':        'bolt.earth',
-  'signzy':            'signzy.com',
-  'aditi consulting':  'aditiconsulting.com',
-  'razorpay':          'razorpay.com',
-  'swiggy':            'swiggy.com',
-  'nextleap':          'nextleap.app',
+/* Local logo map */
+const LOCAL_LOGOS = {
+  'pixster studio': 'logos/pixster-studio.jpeg',
+  'amazon':         'logos/amazon.jpeg',
+  'bolt.earth':     'logos/bolt-earth.jpeg',
+  'signzy':         'logos/signzy.jpeg',
 };
 
 function getLogoUrl(company) {
   const key = company.toLowerCase().trim();
-  const domain = COMPANY_DOMAINS[key] || (key.replace(/\s+/g,'')+'.com');
-  return 'https://www.google.com/s2/favicons?domain=' + domain + '&sz=64';
+  return LOCAL_LOGOS[key] || null;
 }
 
 function logoHTML(company, name) {
   const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
   const logoUrl  = getLogoUrl(company);
+  if (!logoUrl) {
+    return `<div class="t-logo-wrap"><div class="t-logo-fallback" style="display:flex;">${initials}</div></div>`;
+  }
   return `
     <div class="t-logo-wrap">
       <img
