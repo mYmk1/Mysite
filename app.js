@@ -117,7 +117,7 @@ const COMPANY_DOMAINS = {
 function getLogoUrl(company) {
   const key = company.toLowerCase().trim();
   const domain = COMPANY_DOMAINS[key] || (key.replace(/\s+/g,'')+'.com');
-  return `https://logo.clearbit.com/${domain}`;
+  return 'https://www.google.com/s2/favicons?domain=' + domain + '&sz=64';
 }
 
 function logoHTML(company, name) {
