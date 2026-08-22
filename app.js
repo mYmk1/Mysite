@@ -1,4 +1,4 @@
-const SHEET_CSV_URL    = 'https://corsproxy.io/?' + encodeURIComponent('https://docs.google.com/spreadsheets/d/e/2PACX-1vTsFwkypzI7JW_omDIy3g6Xv0d21pbZDByzSC42C4DpA7tsmszgKQlb--1Jts-X7ce2C0R5NL2DtZWp/pub?gid=630245143&single=true&output=csv');
+const SHEET_CSV_URL    = 'https://corsproxy.io/?url=' + encodeURIComponent('https://docs.google.com/spreadsheets/d/e/2PACX-1vTsFwkypzI7JW_omDIy3g6Xv0d21pbZDByzSC42C4DpA7tsmszgKQlb--1Jts-X7ce2C0R5NL2DtZWp/pub?gid=630245143&single=true&output=csv');
 const FEEDBACK_FORM_URL = 'https://forms.gle/eQr23g1ryaqf8FsR9';
 let audioCtx = null;
 
