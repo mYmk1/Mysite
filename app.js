@@ -1,5 +1,5 @@
-const SHEET_CSV_URL    = '';
-const FEEDBACK_FORM_URL = '';
+const SHEET_CSV_URL    = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTsFwkypzI7JW_omDIy3g6Xv0d21pbZDByzSC42C4DpA7tsmszgKQlb--1Jts-X7ce2C0R5NL2DtZWp/pub?gid=630245143&single=true&output=csv';
+const FEEDBACK_FORM_URL = 'https://forms.gle/eQr23g1ryaqf8FsR9';
 let audioCtx = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -117,7 +117,10 @@ async function loadTestimonials() {
     grid.innerHTML = rows.map(r => `
       <div class="t-card sr">
         <p class="t-quote">${clean(r.feedback)}</p>
-        <div class="t-meta"><p class="t-name">${clean(r.name)}</p><p class="t-role">${clean(r.role)} · ${clean(r.company)}</p></div>
+        <div class="t-meta">
+          <p class="t-name">${clean(r.name)}</p>
+          <p class="t-role">${clean(r.company)}${r.rating ? ' · <span style="color:var(--amber);font-size:0.72rem;">' + clean(r.rating) + '</span>' : ''}</p>
+        </div>
       </div>`).join('');
     document.querySelectorAll('.t-card.sr').forEach(el => {
       const o = new IntersectionObserver(e=>{if(e[0].isIntersecting){el.classList.add('visible');o.disconnect();}},{threshold:0.1});
@@ -129,11 +132,17 @@ async function loadTestimonials() {
 function parseCSV(text) {
   const lines = text.trim().split('\n');
   if (lines.length < 2) return [];
-  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g,'').toLowerCase());
+  const cols = splitLine(lines[0]);
+  /* Map by column position — matches Google Form export order:
+     0: Timestamp, 1: Name, 2: Company, 3: Standout, 4: Followthrough */
   return lines.slice(1).map(line => {
-    const cols = splitLine(line); const row = {};
-    headers.forEach((h,i) => row[h] = (cols[i]||'').trim().replace(/^"|"$/g,''));
-    return row;
+    const c = splitLine(line);
+    return {
+      name:     (c[1]||'').trim().replace(/^"|"$/g,''),
+      company:  (c[2]||'').trim().replace(/^"|"$/g,''),
+      feedback: (c[3]||'').trim().replace(/^"|"$/g,''),
+      rating:   (c[4]||'').trim().replace(/^"|"$/g,''),
+    };
   }).filter(r => r.feedback && r.name);
 }
 function splitLine(line){const r=[];let c='',q=false;for(const ch of line){if(ch==='"')q=!q;else if(ch===','&&!q){r.push(c);c='';}else c+=ch;}r.push(c);return r;}
