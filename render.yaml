@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: yunus-site
+    env: static
+    staticPublishPath: .
+    buildCommand: echo "no build"
+    pullRequestPreviewsEnabled: false
