@@ -107,26 +107,41 @@ function setupReveal() {
   document.querySelectorAll('.sr').forEach(el => obs.observe(el));
 }
 
-/* TESTIMONIALS */
-async function loadTestimonials() {
+/* HARDCODED TESTIMONIALS — will be replaced by sheet later */
+function loadTestimonials() {
   const grid = document.getElementById('testimonials-grid');
-  if (!SHEET_CSV_URL) { grid.innerHTML = '<div class="t-empty">Testimonials coming soon.</div>'; return; }
-  try {
-    const rows = parseCSV(await (await fetch(SHEET_CSV_URL)).text());
-    if (!rows.length) { grid.innerHTML = '<div class="t-empty">Testimonials loading.</div>'; return; }
-    grid.innerHTML = rows.map(r => `
-      <div class="t-card sr">
-        <p class="t-quote">${clean(r.feedback)}</p>
-        <div class="t-meta">
-          <p class="t-name">${clean(r.name)}</p>
-          <p class="t-role">${clean(r.company)}${r.rating ? ' · <span style="color:var(--amber);font-size:0.72rem;">' + clean(r.rating) + '</span>' : ''}</p>
-        </div>
-      </div>`).join('');
-    document.querySelectorAll('.t-card.sr').forEach(el => {
-      const o = new IntersectionObserver(e=>{if(e[0].isIntersecting){el.classList.add('visible');o.disconnect();}},{threshold:0.1});
-      o.observe(el);
-    });
-  } catch { grid.innerHTML = '<div class="t-empty">Testimonials coming soon.</div>'; }
+  const testimonials = [
+    {
+      name: 'Prantap Singh',
+      company: 'Pixster Studio',
+      feedback: 'He answers every problem in detail through personal and professional examples and helps with the smallest of doubts, no matter how big or small.',
+      rating: 'Completely'
+    },
+    {
+      name: 'Ankit Shaw',
+      company: 'Aditi Consulting',
+      feedback: 'Yunus worked with me on finding solutions where I was stuck. His unwavering support throughout this recruitment cycle has been the bedrock of my success.',
+      rating: 'Completely'
+    },
+    {
+      name: 'Vignesh Cheepurapalli',
+      company: 'Bolt.earth',
+      feedback: 'Yunus worked closely with me throughout the entire process, helping me navigate challenges and find the right solutions. His proactive approach and consistent support played a key role in driving successful outcomes.',
+      rating: 'Completely'
+    }
+  ];
+  grid.innerHTML = testimonials.map(r => `
+    <div class="t-card sr">
+      <p class="t-quote">${clean(r.feedback)}</p>
+      <div class="t-meta">
+        <p class="t-name">${clean(r.name)}</p>
+        <p class="t-role">${clean(r.company)} · <span style="color:var(--amber);font-size:0.72rem;">${clean(r.rating)}</span></p>
+      </div>
+    </div>`).join('');
+  document.querySelectorAll('.t-card.sr').forEach(el => {
+    const o = new IntersectionObserver(e=>{if(e[0].isIntersecting){el.classList.add('visible');o.disconnect();}},{threshold:0.1});
+    o.observe(el);
+  });
 }
 
 function parseCSV(text) {
